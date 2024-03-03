@@ -1,0 +1,37 @@
+server:
+    port:
+spring:
+    datasource:
+        url:
+        driver-class-name:
+        username:
+        password:
+    jpa:
+        show-sql:
+        open-in-view:
+        hibernate:
+            ddl-auto:
+        properties:
+            hibernate:
+                format_sql:
+    mail:
+        host:
+        username:
+        password:
+        port:
+        properties:
+            mail:
+                smtp:
+                    auth:
+                    starttls:
+                        enable:
+logging:
+    level:
+        root:
+api:
+    prefix:
+jwt:
+    at-exp:
+    rt-exp:
+    secret-key:
+frontend-url:

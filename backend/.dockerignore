@@ -1,0 +1,10 @@
+# target/
+HELP.md
+build/
+.idea/
+*.iml
+*.tmp
+*.log
+docs/
+test/
+tests/
