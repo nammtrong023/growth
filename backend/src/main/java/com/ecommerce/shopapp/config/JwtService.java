@@ -2,7 +2,6 @@ package com.ecommerce.shopapp.config;
 
 import com.ecommerce.shopapp.exceptions.DataNotFoundException;
 import com.ecommerce.shopapp.exceptions.UnauthorizedException;
-import com.ecommerce.shopapp.models.TokenType;
 import com.ecommerce.shopapp.models.User;
 import com.ecommerce.shopapp.repositories.UserRepository;
 import io.jsonwebtoken.Claims;

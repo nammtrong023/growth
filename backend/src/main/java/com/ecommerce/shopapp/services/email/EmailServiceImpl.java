@@ -1,6 +1,9 @@
 package com.ecommerce.shopapp.services.email;
 
 import com.ecommerce.shopapp.models.EmailDetails;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -22,13 +25,22 @@ public class EmailServiceImpl implements EmailService {
             mailMessage.setTo(details.getRecipient());
             mailMessage.setText(details.getMsgBody());
             mailMessage.setSubject(details.getSubject());
-            System.out.println("End setting");
 
             javaMailSender.send(mailMessage);
-            System.out.println("Sent Email at EMAIL");
         }
         catch (Exception e) {
             throw new IllegalArgumentException("Error when sent email");
         }
+    }
+
+    public void sendHtmlEmail(EmailDetails details) throws MessagingException {
+        MimeMessage message = javaMailSender.createMimeMessage();
+
+        message.setFrom(new InternetAddress("Growth"));
+        message.setRecipients(MimeMessage.RecipientType.TO, details.getRecipient());
+        message.setSubject(details.getSubject());
+        message.setContent(details.getMsgBody(), "text/html; charset=utf-8");
+
+        javaMailSender.send(message);
     }
 }

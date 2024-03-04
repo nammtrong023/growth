@@ -3,6 +3,7 @@ package com.ecommerce.shopapp.controllers;
 import com.ecommerce.shopapp.dtos.*;
 import com.ecommerce.shopapp.responses.TokenResponse;
 import com.ecommerce.shopapp.services.auth.AuthService;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -54,7 +55,7 @@ public class AuthController {
 
     @PostMapping("verify-email")
     public ResponseEntity<String> verifyEmail(
-            @Valid @RequestBody VerifyEmailDTO verifyEmailDTO) {
+            @Valid @RequestBody VerifyEmailDTO verifyEmailDTO) throws MessagingException {
         authService.verifyEmail(verifyEmailDTO);
         return ResponseEntity.ok("Please check your email!");
     }

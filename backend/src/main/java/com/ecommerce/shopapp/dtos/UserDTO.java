@@ -27,12 +27,10 @@ public class UserDTO {
     @Size(min = 10, max = 11, message = "Password must be at least 10 characters long")
     private String phoneNumber;
 
+    @NotBlank(message = "Address is required")
     private String address;
 
     @NotBlank(message = "Password cannot be blank")
     @Size(min = 6, message = "Password must be at least 6 characters long")
     private String password;
-
-//    @JsonProperty("google_account_id")
-//    private int googleAccountId;
 }

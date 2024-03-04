@@ -1,5 +1,6 @@
 package com.ecommerce.shopapp.services.auth;
 
+import com.ecommerce.shopapp.config.JwtService;
 import com.ecommerce.shopapp.dtos.*;
 import com.ecommerce.shopapp.exceptions.BadRequestException;
 import com.ecommerce.shopapp.exceptions.DataNotFoundException;
@@ -10,9 +11,10 @@ import com.ecommerce.shopapp.models.User;
 import com.ecommerce.shopapp.repositories.RoleRepository;
 import com.ecommerce.shopapp.repositories.UserRepository;
 import com.ecommerce.shopapp.responses.TokenResponse;
-import com.ecommerce.shopapp.config.JwtService;
 import com.ecommerce.shopapp.services.email.EmailService;
+import com.ecommerce.shopapp.utils.GetEmailText;
 import com.ecommerce.shopapp.utils.OTPCode;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,9 +25,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 
-import static com.ecommerce.shopapp.models.TokenType.*;
+import static com.ecommerce.shopapp.models.TokenType.REFRESH_TYPE;
+import static com.ecommerce.shopapp.models.TokenType.RESET_TYPE;
 
 @Service
 @RequiredArgsConstructor
@@ -56,6 +58,7 @@ public class AuthServiceImpl implements AuthService {
                 .fullName(userDTO.getFullName())
                 .email(userDTO.getEmail())
                 .phoneNumber(userDTO.getPhoneNumber())
+                .address(userDTO.getAddress())
                 .password(passwordEncoder.encode(userDTO.getPassword()))
                 .role(userRole)
                 .build();
@@ -64,7 +67,7 @@ public class AuthServiceImpl implements AuthService {
         user.setOtp(otp);
         userRepo.save(user);
 
-        String message = "Your verify code is: " + otp;
+        String message = "This is your verify code: " + otp;
         EmailDetails emailDetails = EmailDetails
                 .builder()
                 .recipient(userDTO.getEmail())
@@ -72,10 +75,7 @@ public class AuthServiceImpl implements AuthService {
                 .subject(message)
                 .build();
 
-        System.out.println(message);
-
-        CompletableFuture.runAsync(() -> emailService.sendSimpleMail(emailDetails));
-        System.out.println("Sent email at AUTH");
+        emailService.sendSimpleMail(emailDetails);
     }
 
     @Override
@@ -157,7 +157,7 @@ public class AuthServiceImpl implements AuthService {
                 .subject(message)
                 .build();
 
-        CompletableFuture.runAsync(() -> emailService.sendSimpleMail(emailDetails));
+        emailService.sendSimpleMail(emailDetails);
     }
 
     @Override
@@ -184,21 +184,24 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void verifyEmail(VerifyEmailDTO verifyEmailDTO) {
+    public void verifyEmail(VerifyEmailDTO verifyEmailDTO) throws MessagingException {
         User user = userRepo.findByEmail(verifyEmailDTO.getEmail()).
                 orElseThrow(() -> new BadRequestException("Email not found"));
 
+
+
         String resetToken = jwtService.generateResetToken(user);
         String redirectUrl = String.format("%s/password-recovery?reset-token=%s", frontendUrl, resetToken);
+        String message = GetEmailText.getEmailText(redirectUrl);
 
         EmailDetails emailDetails = EmailDetails
                 .builder()
                 .recipient(verifyEmailDTO.getEmail())
-                .msgBody("Click here to reset your password!\n\n" + redirectUrl)
+                .msgBody(message)
                 .subject("Password recovery")
                 .build();
 
-        CompletableFuture.runAsync(() -> emailService.sendSimpleMail(emailDetails));
+        emailService.sendHtmlEmail(emailDetails);
     }
 
     @Override

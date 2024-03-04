@@ -43,9 +43,6 @@ public class User implements UserDetails {
     @Column(name = "is_active")
     private boolean active = false;
 
-    @Column(name = "google_account_id")
-    private int googleAccountId;
-
     @Column(name = "otp", length = 6)
     private String otp;
 

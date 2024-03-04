@@ -58,7 +58,6 @@ services:
             FRONTEND_URL: ${FRONTEND_URL}
         ports:
             - 8080:8080
-            - 587:587
         networks:
             - ecommerce-app
 

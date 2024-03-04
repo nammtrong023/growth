@@ -2,6 +2,7 @@ package com.ecommerce.shopapp.services.auth;
 
 import com.ecommerce.shopapp.dtos.*;
 import com.ecommerce.shopapp.responses.TokenResponse;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 
 public interface AuthService {
@@ -13,7 +14,7 @@ public interface AuthService {
 
         void resendOTP(VerifyEmailDTO verifyEmailDTO);
 
-        void verifyEmail(VerifyEmailDTO verifyEmailDTO);
+        void verifyEmail(VerifyEmailDTO verifyEmailDTO) throws MessagingException;
 
         TokenResponse passwordRecovery(PasswordRecoveryDTO passwordRecoveryDTO);
 }

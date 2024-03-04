@@ -1,6 +1,8 @@
 server:
     port:
 spring:
+    main:
+        banner-mode:
     datasource:
         url:
         driver-class-name:
@@ -35,3 +37,4 @@ jwt:
     rt-exp:
     secret-key:
 frontend-url:
+email-host-url:
